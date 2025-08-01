@@ -1,0 +1,110 @@
+/* Base styling for the entire ConceptGapAnalysisPage */
+.concept-gap-analysis-container {
+  padding: 20px;
+  background-color: #2c2f38; /* Darker background for better visibility */
+  color: white; /* White text for contrast */
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  max-height: 100vh; /* Prevent content from overflowing outside the viewport */
+  overflow-y: auto; /* Allow scrolling if content exceeds the page */
+}
+
+/* Header Section */
+.header-section {
+  margin-bottom: 2rem;
+}
+
+.header-section h1 {
+  color: #ab71ff;
+  font-size: 3rem;
+  margin-bottom: 10px;
+}
+
+.header-section p {
+  font-size: 1.2rem;
+  margin-bottom: 20px;
+}
+
+/* Weak Areas Section */
+.weak-areas-section {
+  width: 100%;
+}
+
+.weak-areas-section h3 {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+}
+
+.weak-areas-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 15px;
+}
+
+.weak-area-box {
+  background-color: #333;
+  padding: 15px 25px;
+  border-radius: 10px;
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: bold;
+  box-shadow: 0 0 15px rgba(142, 45, 226, 0.6);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.weak-area-box:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px rgba(142, 45, 226, 0.9);
+}
+
+/* Score Section */
+.score-section {
+  margin-top: 20px;
+}
+
+.score-section p {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+/* Buttons */
+button {
+  background: linear-gradient(45deg, #8e2de2, #4a00e0);
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 2rem;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(142, 45, 226, 0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  margin-top: 20px;
+}
+
+button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(142, 45, 226, 0.9);
+}
+
+button:disabled {
+  background-color: #555;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Back button specific */
+.back-button {
+  background: #ff5722;
+  margin-top: 10px;
+}
+
+.back-button:hover {
+  background: #e64a19;
+}
+
+.completed {
+  text-decoration: line-through;
+  color: green;
+}

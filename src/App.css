@@ -1,0 +1,180 @@
+/* Base app container */
+.App {
+  min-height: 100vh;
+  width: 100vw;
+  background: linear-gradient(135deg, #0b0b0b, #222222);
+  color: #f5f7fa;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  overflow-x: hidden;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #0b0b0b;
+}
+
+/* Center content with max width and vertical stack */
+.content-wrapper {
+  max-width: 700px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* Title styling */
+.content-wrapper h1 {
+  color: #ab71ff;
+  font-weight: 700;
+  font-size: 2.8rem;
+  text-align: center;
+  margin-bottom: 0;
+}
+
+/* Textarea styling */
+textarea {
+  width: 100%;
+  background-color: #1e1e2f;
+  color: #eee;
+  border: 2px solid #ab71ff;
+  border-radius: 10px;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  resize: vertical;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 25px 2px #ab71ff33;
+}
+
+textarea:focus {
+  border-color: #7b4fff;
+  outline: none;
+  box-shadow: 0 0 30px 4px #ab71ff66;
+}
+
+/* Placeholder styling */
+textarea::placeholder {
+  color: #eee;
+  font-size: 1.1rem;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+/* Button group */
+.button-group {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.button-group button {
+  background: linear-gradient(45deg, #8e2de2, #4a00e0);
+  border: none;
+  color: white;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.75rem 1.8rem;
+  border-radius: 10px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(142, 45, 226, 0.6);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.button-group button:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(142, 45, 226, 0.9);
+}
+
+.button-group button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+  box-shadow: none;
+  background: #7b4fff;
+}
+
+.button-group button:disabled:hover {
+  background: #7b4fff;
+}
+
+/* 🔽 Updated Summary/quiz section styling for compact display */
+.section-box {
+  width: 100%;
+  background: #222222;
+  padding: 1.5rem 1.5rem;
+  border-radius: 15px;
+  color: #f5f7fa;
+  font-size: 0.95rem;
+  line-height: 1.4;
+  box-shadow: 0 0 30px 5px #ab71ffcc;
+  backdrop-filter: blur(10px);
+  background-color: rgba(34, 34, 34, 0.6);
+  white-space: pre-wrap;
+  user-select: text;
+  margin: 0;
+  box-sizing: border-box;
+  transition: box-shadow 0.3s ease;
+}
+
+.section-box:hover {
+  box-shadow: 0 0 30px 6px rgba(123, 104, 238, 1);
+}
+
+.section-box h2 {
+  font-size: 1.5rem;
+  color: #ab71ff;
+  margin-bottom: 0.8rem;
+}
+
+/* 🔽 Bullet points under summary */
+.section-box ul {
+  padding-left: 1.2rem;
+  margin: 0.5rem 0;
+}
+
+.section-box li {
+  margin-bottom: 0.35rem;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+/* Preformatted text (e.g. for quiz if needed) */
+pre {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, monospace;
+  font-size: 1rem;
+  white-space: pre-wrap;
+  line-height: 1.5;
+  color: #ccc;
+}
+
+/* Toastify custom style */
+.custom-toast {
+  background-color: #7b3cff !important;
+  color: white !important;
+  border-radius: 12px;
+  box-shadow: 0 0 15px #a57eff;
+  padding: 1rem 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  text-align: center;
+  justify-content: center;
+}
+
+.custom-toast .Toastify__toast-icon {
+  color: white !important;
+}
+
+/* Prevent overflow on smaller screens */
+body {
+  overflow-x: hidden;
+}

@@ -1,0 +1,145 @@
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./QuizPage.css";
+
+export default function QuizPage() {
+  const navigate = useNavigate();
+  const [quizRaw, setQuizRaw] = useState("");
+  const [quiz, setQuiz] = useState([]);
+  const [userAnswers, setUserAnswers] = useState({});
+  const [score, setScore] = useState(0);
+  const [quizFinished, setQuizFinished] = useState(false);
+
+  useEffect(() => {
+    const raw = localStorage.getItem("quizRaw");
+    if (!raw) {
+      navigate("/assistant");
+      return;
+    }
+    setQuizRaw(raw);
+    parseQuiz(raw);
+  }, [navigate]);
+
+  const parseQuiz = (raw) => {
+    const lines = raw
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+
+    const parsed = [];
+    let currentQuestion = null;
+
+    lines.forEach((line) => {
+      if (/^\d+\./.test(line)) {
+        if (currentQuestion) parsed.push(currentQuestion);
+        currentQuestion = {
+          question: line.replace(/^\d+\.\s*/, ""),
+          options: [],
+          correctIndex: null,
+        };
+      } else if (/^[a-dA-D]\)/.test(line)) {
+        currentQuestion?.options.push(line.replace(/^[a-dA-D]\)\s*/, ""));
+      } else if (/^Answer:/i.test(line)) {
+        const match = line.match(/^Answer:\s*([a-dA-D])/i);
+        if (match && currentQuestion) {
+          const index = match[1].toLowerCase().charCodeAt(0) - 97;
+          currentQuestion.correctIndex = index;
+        }
+      }
+    });
+
+    if (currentQuestion) parsed.push(currentQuestion);
+    setQuiz(parsed);
+  };
+
+  const handleAnswer = (qIndex, oIndex) => {
+    if (userAnswers[qIndex] !== undefined || quizFinished) return;
+
+    const isCorrect = quiz[qIndex].correctIndex === oIndex;
+
+    setUserAnswers((prev) => {
+      const newAnswers = { ...prev, [qIndex]: oIndex };
+      if (Object.keys(newAnswers).length === quiz.length) {
+        setQuizFinished(true);
+      }
+      return newAnswers;
+    });
+
+    if (isCorrect) {
+      setScore((prev) => prev + 1);
+    }
+  };
+
+  const restart = () => {
+    setUserAnswers({});
+    setScore(0);
+    setQuizFinished(false);
+  };
+
+  const goBack = () => {
+    navigate("/assistant");
+  };
+
+  return (
+    <div className="quiz-page">
+      <h1>🧠 Quiz Game</h1>
+      <p>
+        Score: {score} / {quiz.length}
+      </p>
+
+      {quiz.map((q, qIndex) => (
+        <div className="quiz-question" key={qIndex}>
+          <p>
+            <strong>
+              Q{qIndex + 1}. {q.question}
+            </strong>
+          </p>
+          <ul className="options-list">
+            {q.options.map((opt, oIndex) => {
+              const selected = userAnswers[qIndex] === oIndex;
+              const correct = q.correctIndex === oIndex;
+              let className = "";
+
+              if (userAnswers[qIndex] !== undefined) {
+                if (selected && correct) className = "correct";
+                else if (selected && !correct) className = "wrong";
+                else if (!selected && correct) className = "correct";
+              }
+
+              return (
+                <li
+                  key={oIndex}
+                  className={className}
+                  onClick={() => handleAnswer(qIndex, oIndex)}
+                  style={{
+                    cursor: userAnswers[qIndex] !== undefined ? "default" : "pointer",
+                  }}
+                >
+                  {opt}
+                </li>
+              );
+            })}
+          </ul>
+
+          {userAnswers[qIndex] !== undefined && (
+            <p className="result-msg">
+              {userAnswers[qIndex] === q.correctIndex ? (
+                "✅ Correct!"
+              ) : (
+                <span>
+                  ❌ Wrong. Correct answer:{" "}
+                  <strong>{q.options[q.correctIndex]}</strong>
+                </span>
+              )}
+            </p>
+          )}
+        </div>
+      ))}
+
+      <div className="quiz-actions">
+        {quizFinished && <button onClick={restart}>🔁 Restart</button>}
+        <button onClick={goBack}>🏠 Back to Summary</button>
+      </div>
+    </div>
+  );
+}

@@ -1,0 +1,17 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
+import './Landingpage.css';
+
+function LandingPage() {
+  const navigate = useNavigate();
+
+  return (
+    <div className="landing-container">
+      <h1>Welcome to SmartBuddy</h1>
+      <p>Your intelligent note summarizer and quiz assistant.</p>
+      <button onClick={() => navigate('/assistant')}>Get Started</button>
+    </div>
+  );
+}
+
+export default LandingPage;
