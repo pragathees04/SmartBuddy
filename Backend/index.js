@@ -29,7 +29,7 @@ function detectTopic(questionText) {
   return "general";
 }
 
-// 🧠 Summarize Notes
+// 🧠 Summary Generator
 app.post('/api/summarize', async (req, res) => {
   const { notes } = req.body;
 
@@ -37,16 +37,29 @@ app.post('/api/summarize', async (req, res) => {
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: 'anthropic/claude-3-sonnet-20240229',
-        messages: [{ role: 'user', content: `Short Summary:\n${notes}` }],
-        max_tokens: 500,
+        model: 'google/gemini-2.5-flash-lite',
+        messages: [
+          {
+            role: 'user',
+            content: `Summarize the following notes in a clean and simple structure.
+
+✅ Format:
+- Divide into short subtopics (if any).
+- Use plain text headings (like "1. Overview", "2. Key Points", etc).
+- Below each heading, include 2-4 bullet points.
+- Avoid markdown formatting like *, ###, or emojis.
+- Use plain dashes (-) or bullets (•) only when needed.
+
+Notes:
+${notes}`
+          }
+        ],
+        max_tokens: 700,
       },
       {
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'http://localhost:3000',
-          'X-Title': 'Student-AI-Hackathon-App',
         },
       }
     );
@@ -59,7 +72,7 @@ app.post('/api/summarize', async (req, res) => {
   }
 });
 
-// 📝 Generate Quiz
+// 📝 Quiz Generator
 app.post('/api/generate-quiz', async (req, res) => {
   const { notes } = req.body;
 
@@ -67,7 +80,7 @@ app.post('/api/generate-quiz', async (req, res) => {
     const response = await axios.post(
       'https://openrouter.ai/api/v1/chat/completions',
       {
-        model: 'anthropic/claude-3-sonnet-20240229',
+        model: 'google/gemini-2.5-flash-lite',
         messages: [
           {
             role: 'user',
@@ -76,16 +89,8 @@ app.post('/api/generate-quiz', async (req, res) => {
 Notes:
 ${notes}
 
-Format:
-1. Sample question?
-   a) Option 1
-   b) Option 2
-   c) Option 3
-   d) Option 4
-Answer: b
-
-Only provide the quiz text.`,
-          },
+Only provide the quiz text.`
+          }
         ],
         max_tokens: 700,
       },
@@ -93,8 +98,6 @@ Only provide the quiz text.`,
         headers: {
           Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
           'Content-Type': 'application/json',
-          'HTTP-Referer': 'http://localhost:3000',
-          'X-Title': 'Student-AI-Hackathon-App',
         },
       }
     );
@@ -107,7 +110,7 @@ Only provide the quiz text.`,
   }
 });
 
-// 📊 Analyze Weak Topics
+// 📊 Weak Topic Analyzer
 app.post('/api/analyze-weak-topics', (req, res) => {
   const { answers, quiz } = req.body;
 
@@ -131,14 +134,14 @@ app.post('/api/analyze-weak-topics', (req, res) => {
   res.json({ weakTopics });
 });
 
-// 🧠 Classify Topic by Keywords
+// 🔍 Topic Classifier
 app.post('/api/classify-topic', (req, res) => {
   const { question } = req.body;
   const topic = detectTopic(question);
   res.json({ topic });
 });
 
-// 🚀 NEW: Study Resources Generator for StudyPathPage
+// 🧭 Study Path Generator
 app.post('/api/get-study-resources', (req, res) => {
   const { topics } = req.body;
 
@@ -193,7 +196,7 @@ app.post('/api/get-study-resources', (req, res) => {
 });
 
 // ✅ Start Server
-const PORT = 4000;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`✅ Backend running on http://localhost:${PORT}`);
 });
