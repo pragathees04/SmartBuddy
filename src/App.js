@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./App.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -10,17 +10,6 @@ function SmartBuddyHome() {
   const [isSummarizing, setIsSummarizing] = useState(false);
   const [isGeneratingQuiz, setIsGeneratingQuiz] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const savedSummary = localStorage.getItem("summary");
-    if (savedSummary) setSummary(savedSummary);
-  }, []);
-
-  useEffect(() => {
-    summary
-      ? localStorage.setItem("summary", summary)
-      : localStorage.removeItem("summary");
-  }, [summary]);
 
   const handleSummarize = async () => {
     if (!notes.trim()) {
@@ -106,35 +95,39 @@ function SmartBuddyHome() {
   const handleClear = () => {
     setNotes("");
     setSummary("");
-    localStorage.removeItem("summary");
     localStorage.removeItem("quizRaw");
     window.scrollTo({ top: 0, behavior: "smooth" });
     toast.success("✅ Reset complete!", { className: "custom-toast" });
   };
 
-  // 👉 Render summary as intro + bullets
-  const renderBulletSummary = () => {
-    const lines = summary
-      .split(/[\n•-]/)
-      .map((line) => line.trim())
+  // ✨ Format summary with headings + bullets
+  const renderStructuredSummary = () => {
+    const blocks = summary
+      .split(/\n(?=\w.+?:)/) // match lines like "Title:", "Plot:" etc
+      .map((b) => b.trim())
       .filter(Boolean);
 
-    if (lines.length === 0) return null;
-
-    const firstLine = lines[0];
-    const bullets = lines.slice(1);
-
     return (
-      <>
-        <p style={{ fontWeight: "600", marginBottom: "0.75rem" }}>{firstLine}</p>
-        <ul style={{ paddingLeft: "1.5rem" }}>
-          {bullets.map((point, index) => (
-            <li key={index} style={{ marginBottom: "0.5rem" }}>
-              {point}
-            </li>
-          ))}
-        </ul>
-      </>
+      <div style={{ lineHeight: "1.6" }}>
+        {blocks.map((block, i) => {
+          const lines = block.split("\n").filter(Boolean);
+          const heading = lines[0].replace(/:$/, "");
+          const bullets = lines.slice(1);
+
+          return (
+            <div key={i} style={{ marginBottom: "1.5rem" }}>
+              <h4 style={{ color: "#ab71ff", marginBottom: "0.5rem" }}>{heading}</h4>
+              <ul style={{ paddingLeft: "1.5rem" }}>
+                {bullets.map((point, idx) => (
+                  <li key={idx} style={{ marginBottom: "0.4rem" }}>
+                    {point.replace(/^[-•]\s/, "")}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
+      </div>
     );
   };
 
@@ -163,7 +156,7 @@ function SmartBuddyHome() {
         {summary && (
           <div className="section-box">
             <h2>📄 Summary</h2>
-            {renderBulletSummary()}
+            {renderStructuredSummary()}
           </div>
         )}
       </div>
